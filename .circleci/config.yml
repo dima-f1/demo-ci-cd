@@ -35,4 +35,4 @@ workflows:
               only: master
   test:
     jobs:
-      - test  
+      - test: 
