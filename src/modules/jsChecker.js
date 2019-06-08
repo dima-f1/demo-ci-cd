@@ -1,5 +1,5 @@
 function getMessage() {
-  return 'True!';
+  return 'True! But another';
 }
 
 if (typeof document !== 'undefined') {
