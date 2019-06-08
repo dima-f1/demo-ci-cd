@@ -33,6 +33,6 @@ workflows:
           filters:
             branches:
               only: master
-  build:
+  test:
     jobs:
       - test  
