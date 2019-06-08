@@ -21,7 +21,7 @@ jobs:
   test:
     docker:
       - image: circleci/python:2.7-node
-    steps
+    steps:
       - checkout
       - run: npm install
       - run: npm run test
@@ -35,4 +35,4 @@ workflows:
               only: master
   test:
     jobs:
-      - test: 
+      - test
