@@ -38,13 +38,13 @@ workflows:
   version: 2.1
   build:
     jobs:
-      - test
+      #- test
       - build:
           filters:
             branches:
               only: master
-          requires: # We only run the "hold" job when test2 has succeeded
-            - test
+          #requires: # We only run the "hold" job when test2 has succeeded
+          #  - test
       - hold: # <<< A job that will require manual approval in the CircleCI web application.
           type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
           requires: # We only run the "hold" job when test2 has succeeded
