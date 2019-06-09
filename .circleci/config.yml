@@ -13,10 +13,10 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
-      - persist_to_workspace:
-          root: dist
-          paths:
-            - ./
+      #- persist_to_workspace:
+      #    root: dist
+      #    paths:
+      #      - ./
   #test:
   #  <<: *defaults-node
   #  steps:
