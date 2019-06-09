@@ -13,10 +13,10 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
-      #- persist_to_workspace:
-      #    root: dist
-      #    paths:
-      #      - ./
+      - persist_to_workspace:
+          root: dist
+          paths:
+            - ./
   #test:
   #  <<: *defaults-node
   #  steps:
@@ -28,12 +28,11 @@ jobs:
       - image: circleci/python:2.7-node
     environment:
       AWS_REGION: us-east-1
+    working_directory: ~/demo-ci-cd
     steps:
-      #- attach_workspace:
-      #  at: ~/demo-ci-cd
+      - attach_workspace:
+        at: ~/demo-ci-cd/dist
       - checkout
-      - run: npm install
-      - run: npm run build
       - aws-s3/sync:
         from: dist
         to: 's3://dima-f1-ci-cd-test/'
