@@ -1,32 +1,36 @@
+defaults: &defaults-node
+  working_directory: ~/demo-ci-cd
+  docker:
+    - image: circleci/node:10
+
 version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.4
 jobs:
-  test:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/demo-ci-cd
-    steps:
-      - checkout
-      - run: npm install
-      - run: npm run test
   build:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/demo-ci-cd
+    <<: *defaults-node
     steps:
       - checkout
       - run: npm install
       - run: npm run build
+    - persist_to_workspace: 
+      root: dist
+      paths: 
+        - ./
+  test:
+    <<: *defaults-node
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run test
   deploy:
     docker:
       - image: circleci/python:2.7-node
     environment:
       AWS_REGION: us-east-1
     steps:
-      - checkout
-      - run: npm install
-      - run: npm run build
+      - attach_workspace: 
+        at: ~/demo-ci-cd
       - aws-s3/sync:
           from: dist
           to: 's3://dima-f1-ci-cd-test/'
@@ -38,19 +42,23 @@ workflows:
   version: 2.1
   build:
     jobs:
-      - test
       - build:
-          filters:
-            branches:
-              only: master
-          requires: # We only run the "hold" job when test2 has succeeded
-            - test
-      - hold: # <<< A job that will require manual approval in the CircleCI web application.
-          type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+        filters:
+          branches:
+            only: master
+      - test:
+        filters:
+          branches:
+            only: master
           requires: # We only run the "hold" job when test2 has succeeded
             - build
+      - hold: # <<< A job that will require manual approval in the CircleCI web application.
+        type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+        requires: # We only run the "hold" job when test2 has succeeded
+          - build
+          - test
       #On approval of the `hold` job, any successive job that requires the `hold` job will run. 
       #In this case, a user is manually triggering the deploy job.
       - deploy:
-          requires:
-            - hold
+        requires:
+          - hold
