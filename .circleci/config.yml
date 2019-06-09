@@ -14,15 +14,15 @@ jobs:
       - run: npm install
       - run: npm run build
       - persist_to_workspace:
-        root: dist
-        paths:
-          - ./
-  test:
-    <<: *defaults-node
-    steps:
-      - checkout
-      - run: npm install
-      - run: npm run test
+          root: dist
+          paths:
+            - ./
+  #test:
+  #  <<: *defaults-node
+  #  steps:
+  #    - checkout
+  #    - run: npm install
+  #    - run: npm run test
   deploy:
     docker:
       - image: circleci/python:2.7-node
@@ -46,12 +46,12 @@ workflows:
         filters:
           branches:
             only: master
-      - test:
-        filters:
-          branches:
-            only: master
-          requires: # We only run the "hold" job when test2 has succeeded
-            - build
+      #- test:
+      #  filters:
+      #    branches:
+      #      only: master
+      #    requires: # We only run the "hold" job when test2 has succeeded
+      #      - build
       - hold: # <<< A job that will require manual approval in the CircleCI web application.
         type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
         requires: # We only run the "hold" job when test2 has succeeded
