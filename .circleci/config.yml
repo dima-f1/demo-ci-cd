@@ -7,7 +7,6 @@ version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.4
 jobs:
-  
   build:
     <<: *defaults-node
     steps:
@@ -18,14 +17,12 @@ jobs:
         root: dist
         paths: 
           - ./
-
   test:
     <<: *defaults-node
     steps:
       - checkout
       - run: npm install
       - run: npm run test
-        
   deploy:
     docker:
       - image: circleci/python:2.7-node
@@ -41,7 +38,6 @@ jobs:
           --acl public-read \
           --cache-control "max-age=86400" \
         overwrite: true
-          
 workflows:
   version: 2.1
   build:
@@ -60,7 +56,6 @@ workflows:
         type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
         requires: # We only run the "hold" job when test2 has succeeded
           - build
-          - test
       #On approval of the `hold` job, any successive job that requires the `hold` job will run. 
       #In this case, a user is manually triggering the deploy job.
       - deploy:
