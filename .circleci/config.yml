@@ -1,7 +1,7 @@
 defaults: &defaults-node
   working_directory: ~/demo-ci-cd
   docker:
-    - image: circleci/node:10
+    - image: circleci/python:2.7-node
 
 version: 2.1
 orbs:
@@ -32,9 +32,6 @@ jobs:
     steps:
       - attach_workspace : 
           at: ~/demo-ci-cd/dist
-      - checkout
-      - run: npm install
-      - run: npm run build
       - aws-s3/sync:
         from: dist
         to: 's3://dima-f1-ci-cd-test/'
