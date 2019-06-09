@@ -31,7 +31,10 @@ jobs:
     working_directory: ~/demo-ci-cd
     steps:
       - attach_workspace : 
-          at: ~/demo-ci-cd/dist
+          at: ~/demo-ci-cd
+      - checkout
+      - run: npm install
+      - run: npm run build
       - aws-s3/sync:
         from: dist
         to: 's3://dima-f1-ci-cd-test/'
