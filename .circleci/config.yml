@@ -7,22 +7,25 @@ version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.4
 jobs:
+  
   build:
     <<: *defaults-node
     steps:
       - checkout
       - run: npm install
       - run: npm run build
-    - persist_to_workspace: 
-      root: dist
-      paths: 
-        - ./
+      - persist_to_workspace: 
+        root: dist
+        paths: 
+          - ./
+
   test:
     <<: *defaults-node
     steps:
       - checkout
       - run: npm install
       - run: npm run test
+        
   deploy:
     docker:
       - image: circleci/python:2.7-node
@@ -32,12 +35,13 @@ jobs:
       - attach_workspace: 
         at: ~/demo-ci-cd
       - aws-s3/sync:
-          from: dist
-          to: 's3://dima-f1-ci-cd-test/'
-          arguments: |
-            --acl public-read \
-            --cache-control "max-age=86400" \
-          overwrite: true
+        from: dist
+        to: 's3://dima-f1-ci-cd-test/'
+        arguments: |
+          --acl public-read \
+          --cache-control "max-age=86400" \
+        overwrite: true
+          
 workflows:
   version: 2.1
   build:
